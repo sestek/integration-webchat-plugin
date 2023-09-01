@@ -1,0 +1,43 @@
+PODS:
+  - Alamofire (4.9.1)
+  - Down (0.11.0)
+  - Flutter (1.0.0)
+  - SDWebImage (5.17.0):
+    - SDWebImage/Core (= 5.17.0)
+  - SDWebImage/Core (5.17.0)
+  - sestek-webchat-ios (0.0.9):
+    - Alamofire (~> 4.9.1)
+    - Down
+    - SDWebImage (~> 5.0)
+  - url_launcher_ios (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - sestek-webchat-ios (~> 0.0.9)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Down
+    - SDWebImage
+    - sestek-webchat-ios
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  Down: b6ba1bc985c9d2f4e15e3b293d2207766fa12612
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  SDWebImage: 750adf017a315a280c60fde706ab1e552a3ae4e9
+  sestek-webchat-ios: ffb21f8d7cfdc06092acf15eec98546dcf8fafb6
+  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
+
+PODFILE CHECKSUM: 2e91a8417531c43204caa6b2b98372b2b36d4b49
+
+COCOAPODS: 1.12.1
