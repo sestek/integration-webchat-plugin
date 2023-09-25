@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class WebViewStack extends StatefulWidget {
   const WebViewStack({super.key});
@@ -9,48 +10,39 @@ class WebViewStack extends StatefulWidget {
 }
 
 class _WebViewStackState extends State<WebViewStack> {
-  var loadingPercentage = 0;
-  late final WebViewController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = WebViewController()
-      ..setNavigationDelegate(NavigationDelegate(
-        onPageStarted: (url) {
-          setState(() {
-            loadingPercentage = 0;
-          });
-        },
-        onProgress: (progress) {
-          setState(() {
-            loadingPercentage = progress;
-          });
-        },
-        onPageFinished: (url) {
-          setState(() {
-            loadingPercentage = 100;
-          });
-        },
-      ))
-      ..loadRequest(
-        Uri.parse('https://demo-app.sestek.com/mobile.html'),
-      )
-      ..setJavaScriptMode(JavaScriptMode.unrestricted);
+  var statusWeb = false;
+  Future<void> requestMicrophonePermission() async {
+    PermissionStatus status = await Permission.microphone.status;
+    if (status.isGranted) {
+      statusWeb = true;
+    } else {}
   }
 
+  var loadingPercentage = 0;
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        WebViewWidget(
-          controller: controller,
-        ),
-        if (loadingPercentage < 100)
-          LinearProgressIndicator(
-            value: loadingPercentage / 100.0,
+    InAppWebViewController _webViewController;
+    return Expanded(
+      child: Container(
+        child: InAppWebView(
+          initialUrlRequest: URLRequest(
+              url: Uri.https('demo-app.sestek.com', '/gbk_mobile.html')),
+          initialOptions: InAppWebViewGroupOptions(
+            crossPlatform: InAppWebViewOptions(
+              mediaPlaybackRequiresUserGesture: false,
+            ),
           ),
-      ],
+          onWebViewCreated: (InAppWebViewController controller) {
+            _webViewController = controller;
+          },
+          androidOnPermissionRequest: (InAppWebViewController controller,
+              String origin, List<String> resources) async {
+            return PermissionRequestResponse(
+                resources: resources,
+                action: PermissionRequestResponseAction.GRANT);
+          },
+        ),
+      ),
     );
   }
 }

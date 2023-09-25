@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 import './web_view_stack.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Permission.microphone.request();
+  //await Permission.microphone.request();
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
