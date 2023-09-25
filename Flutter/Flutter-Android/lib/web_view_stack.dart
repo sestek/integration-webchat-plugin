@@ -18,7 +18,6 @@ class _WebViewStackState extends State<WebViewStack> {
     } else {}
   }
 
-  var loadingPercentage = 0;
   @override
   Widget build(BuildContext context) {
     InAppWebViewController _webViewController;
