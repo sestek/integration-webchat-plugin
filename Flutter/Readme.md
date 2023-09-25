@@ -29,7 +29,7 @@
 <img width="630" alt="MicrosoftTeams-image (17)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/5e015f23-d301-445d-a716-0947364a67b2">
 
 
-### Basically, webview is inserted in a flutter project and webchat integration for Android is explained.
+### Basically, webview is inserted in a flutter project and webchat integration for Android and iOS is explained.
 
 
 <img width="980" alt="MicrosoftTeams-image (14)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/969dd556-6614-4f20-87a3-3d7d1a723b8e">
