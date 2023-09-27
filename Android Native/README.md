@@ -4,51 +4,50 @@
 
 ● We have to create function named WebViewScreen
 
-![Screenshot 2023-09-01 at 12 04 33](https://github.com/sestek/integration-webchat-plugin/assets/54579230/096769be-9e2b-4c59-80fd-a9419164954f)
+<img width="719" alt="MicrosoftTeams-image (18)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/510831ea-2ebd-4cc1-8a96-aea036f1d276">
 
-```javascript
-@SuppressLint("SetJavaScriptEnabled")
-@Composable
-fun WebViewScreen() {
-    val context = LocalContext.current
-    val webView = WebView(context)
-    webView.clearCache(true)
-    webView.clearHistory()
-    webView.settings.javaScriptEnabled = true
-    webView.settings.domStorageEnabled = true
-    webView.webViewClient = WebViewClient()
-    webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
+<img width="550" alt="MicrosoftTeams-image (15)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/114abc0f-80a1-48d5-b3ca-7ae1910d3abb">
 
-    // We are capturing the webchat shutdown event from webview, the event name is Android
-    webView.addJavascriptInterface(WebAppInterface(context), "Android")
 
-    webView.loadUrl("https://demo-app.sestek.com/mobile_test.html")
-
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = { webView }
-    )
-}
-```
 Here we allow few features like localstorage, js usage.
 
-Required for capturing shutdown event
+Required for capturing shutdown event and You can use this section to capture and customize events from webchat.
 
-![Screenshot 2023-09-01 at 12 25 55](https://github.com/sestek/integration-webchat-plugin/assets/54579230/174635ac-79d8-4823-8ed6-a5c93fc7f84a)
+
+<img width="707" alt="MicrosoftTeams-image (16)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/57ddb247-992a-4b69-a961-a264f558dfd2">
+
 
 ● We naturally call the composable WebViewScreen function we created
 
-![Screenshot 2023-09-01 at 12 06 09](https://github.com/sestek/integration-webchat-plugin/assets/54579230/f9c86b7c-0c4c-4f70-835b-95213b631643)
+
+<img width="551" alt="MicrosoftTeams-image (19)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/9324a989-8a23-4849-b8d4-3a886040424b">
+
 
 ● We need to grant some permissions in AndroidManifest.xml. Such as internet access etc.
-```javascript
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.WAKE_LOCK" />
-```
+
+
+<img width="596" alt="MicrosoftTeams-image (14)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/d7e56495-03db-4134-a718-ac6ca892e9ae">
+
+
+● Implement these packages in your build.gralde file
+
+
+<img width="631" alt="MicrosoftTeams-image (13)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/0567904a-522e-4709-bce0-608d28dd3782">
+
+
+● Here we wanted to show the webview view with a buttonModalSheet. You can configure it as you wish.
+
+
+<img width="730" alt="MicrosoftTeams-image (17)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/e84fe9d8-beaf-477e-b69b-721302f2285b">
+
+
 ● After opening the webview and closing the chat, routing and using is entirely up to your skills. Develop with fun ✨ 🎉
 
-![Screenshot 2023-09-01 at 12 04 46](https://github.com/sestek/integration-webchat-plugin/assets/54579230/0b149556-b3cb-46f6-aca4-f462e53501b6)
+
+<img width="325" alt="MicrosoftTeams-image (10)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/33286826-3298-4895-ae5e-be751aa44abd">
+<img width="325" alt="MicrosoftTeams-image (11)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/0f3ba0ba-8004-4913-81f1-540e08179f5d">
+<img width="325" alt="MicrosoftTeams-image (12)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/df0557fa-d55e-4c16-b50e-3e3ffb00a863">
+
 
 ● It has been tested and developed with current android versions 🎯 .
 
