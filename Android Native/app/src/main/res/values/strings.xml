@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Webview webchat</string>
+    <string name="title_activity_result_page">ResultPage</string>
 </resources>
