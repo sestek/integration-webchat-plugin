@@ -118,10 +118,12 @@
 
 9. #### Have fun while developing ✨ 🎉
 
+## Sample Screenshots:
+<img width="750" alt="MicrosoftTeams-image (10)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/33286826-3298-4895-ae5e-be751aa44abd">
 
-    <img width="750" alt="MicrosoftTeams-image (10)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/33286826-3298-4895-ae5e-be751aa44abd">
-    <img width="750" alt="MicrosoftTeams-image (11)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/0f3ba0ba-8004-4913-81f1-540e08179f5d">
-    <img width="750" alt="MicrosoftTeams-image (12)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/df0557fa-d55e-4c16-b50e-3e3ffb00a863">
+<img width="750" alt="MicrosoftTeams-image (11)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/0f3ba0ba-8004-4913-81f1-540e08179f5d">
+
+<img width="750" alt="MicrosoftTeams-image (12)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/df0557fa-d55e-4c16-b50e-3e3ffb00a863">
 
 
 
