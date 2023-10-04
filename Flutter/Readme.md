@@ -1,38 +1,79 @@
 
-## WEBCHAT WEBVIEW - ANDROID & IOS INTEGRATION IN FLUTTER!
+## Flutter Webchat Webview Integration for iOS & Android
 
 
-•	“webview_flutter” package is installed in the flutter project. (last version recommended)
+1. Install `webview_flutter` package in project.
+    
+    > 🗒️ Use latest version where possible
 
-•	“web_view_stack.dart” file is created.
+2. Create `web_view_stack.dart`
 
-<img width="795" alt="MicrosoftTeams-image (10)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/af7eaf90-6541-45fc-9da7-3b178550e1bd">
-
-
-#### ! IMPORTANT: Webview basic configuration and webview usage structure is entirely designed by the customer. Only an example webview is shared in the document.
-
-•	Since some android versions are also needed, following permissions to the AndroidManifest.xml file under android/src/main is added.
-
-<img width="558" alt="MicrosoftTeams-image (16)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/c9c3da31-0dbd-4186-b9e8-b9948b0fe1ab">
+    <img width="750" alt="MicrosoftTeams-image (10)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/af7eaf90-6541-45fc-9da7-3b178550e1bd">
 
 
+> 🛑 **IMPORTANT**: This is an example, design Webview as per *your* project requirements!
 
-• ios/Runner/Info.plist 
+3. Grant permissions:
+   
+   - `AndroidManifest.xml`
+  
+     - `android.permission.INTERNET`
+     - `android.permission.ACCESS_NETWORK_STATE`
+     - `android.permission.WAKE_LOCK`
+     - `android.permission.RECORD_AUDIO`
+     - `android.permission.MODIFY_AUDIO_SETTINGS`
+     - `android.permission.AUDIO_CAPTURE`
+  
+    - `ios/Runner/Info.plist`
+      ```xml
+        <key>NSMicrophoneUsageDescription</key>
+        <string>WebChat requires acess to microphone.</string> 
+      ```
 
-<img width="398" alt="MicrosoftTeams-image (15)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/65868f2a-7319-4264-b658-439746c14613">
+4. Use `WebViewStack` in `main.dart`. Design as per *your* project!
+
+    ```dart
+    import 'package:flutter/material.dart';
+    import './web_view_stack.dart';
+    import 'package:permission_handler/permission_handler.dart';
 
 
-•	After permissions added, “WebViewStack" in our main.dart file is used.
 
-(This is just an example, creating and styling the button is on customer side, since it is purely flutter development and has nothing to do with chat plugin.)
+    void main() async { 
 
-<img width="630" alt="MicrosoftTeams-image (17)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/5e015f23-d301-445d-a716-0947364a67b2">
+        WidgetsFlutterBinding. ensureInitialized();
 
+        await Permission.microphone.request();
 
-### Basically, webview is inserted in a flutter project and webchat integration for Android and iOS is explained.
+        runApp (
+            const MaterialApp(
+                debugShowCheckedModeBanner: false,
+                home: WebViewApp(),
+            ),
+        );
+    }
+        
+    class WebViewApp extends StatefulWidget{
 
+        const WebViewApp ({super. key});
 
-<img width="980" alt="MicrosoftTeams-image (14)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/969dd556-6614-4f20-87a3-3d7d1a723b8e">
+        @override
+        State«WebViewApp> createState() => _WebViewAppState() ;
+    }
+
+    class _WebViewAppState extends State<WebViewApp> {
+
+        @override
+        Widget build(BuildContext context) {
+            return Scaffold(
+                body: SafeArea(child: const WebViewStack()),
+            );
+        }
+    }
+    ```
+
+## Sample Screenshot:
+<img width="750" alt="MicrosoftTeams-image (14)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/969dd556-6614-4f20-87a3-3d7d1a723b8e">
 
 
 
