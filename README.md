@@ -4,6 +4,7 @@
 [3]: https://github.com/sestek/integration-webchat-plugin/tree/main/Android%20Native
 [4]: https://github.com/sestek/integration-webchat-plugin/tree/main/Flutter/Flutter-iOS
 [5]: https://github.com/sestek/integration-webchat-plugin/tree/main/Flutter/Flutter-Android
+[6]: https://github.com/sestek/integration-webchat-plugin/tree/main/iOS%20swift%20webchat
 <div>
  <img height="50" src="https://user-images.githubusercontent.com/25181517/183897015-94a058a6-b86e-4e42-a37f-bf92061753e5.png">
  &nbsp;&nbsp;
@@ -21,8 +22,10 @@
  
 - iOS
   
-  * We have a package that you can use on the iOS platform.
-  * [iOS Package][2]
+  * We have a package that you can use on the iOS platform or use webview webchat plugin.
+  * Our choice webchat plugin webview
+  * iOS webchat webview : [iOS webchat webview][6]
+  * iOS Package :  [iOS Package][2]
 
     
 - Android Native 
