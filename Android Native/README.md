@@ -1,53 +1,129 @@
-# INTEGRATION Webchat webview in Android Native:
+# Native Android Webchat Webview Integration
+> 📝 **Note**: Tested and developed with the latest Android Jetpack version 🎯 .
 
-● First, let's start a clean Kotlin/Java/Groovy project
+1. #### Start with a clean Kotlin/Java/Groovy project
 
-● We have to create function named WebViewScreen
+2. #### Create a function named **WebViewScreen**
 
-<img width="719" alt="MicrosoftTeams-image (18)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/510831ea-2ebd-4cc1-8a96-aea036f1d276">
+    ```kotlin
+    @SuppressLint("SetJavaScriptEnabled")
+    @Composable
+    fun WebViewScreen(isVisible: MutableState<Boolean>) {
+        val context = LocalContext. current
+        val webView = WebView(context)
+        webView. clearCache ( includeDiskFiles: true)
+        webView.clearHistory()
 
-<img width="550" alt="MicrosoftTeams-image (15)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/114abc0f-80a1-48d5-b3ca-7ae1910d3abb">
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.allowFileAccess = true
+        webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
+        webView. webChromeClient = CustomWebViewClient()
 
+        webView.addJavascriptInterface(WebAppInterface(context, isVisible),name: "Android")
 
-Here we allow few features like localstorage, js usage.
+        webView.loadUrl( url: "https://demo-app.sestek.com/gbk mobile.html")
 
-Required for capturing shutdown event and You can use this section to capture and customize events from webchat.
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { webView}
+        )
+    }
+    ```
 
+1. #### Allow few features like localstorage, js usage.
 
-<img width="707" alt="MicrosoftTeams-image (16)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/57ddb247-992a-4b69-a961-a264f558dfd2">
-
-
-● We naturally call the composable WebViewScreen function we created
-
-
-<img width="551" alt="MicrosoftTeams-image (19)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/9324a989-8a23-4849-b8d4-3a886040424b">
-
-
-● We need to grant some permissions in AndroidManifest.xml. Such as internet access etc.
-
-
-<img width="596" alt="MicrosoftTeams-image (14)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/d7e56495-03db-4134-a718-ac6ca892e9ae">
-
-
-● Implement these packages in your build.gralde file
-
-
-<img width="631" alt="MicrosoftTeams-image (13)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/0567904a-522e-4709-bce0-608d28dd3782">
-
-
-● Here we wanted to show the webview view with a buttonModalSheet. You can configure it as you wish.
-
-
-<img width="730" alt="MicrosoftTeams-image (17)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/e84fe9d8-beaf-477e-b69b-721302f2285b">
-
-
-● After opening the webview and closing the chat, routing and using is entirely up to your skills. Develop with fun ✨ 🎉
+    ```kotlin
+    class CustomWebViewClient : WebChromeClient() {
+        override fun onPermissionRequest(request: PermissionRequest?) {
+            request?.grant(request.resources)
+        }
+    ｝
+    ```
 
 
-<img width="325" alt="MicrosoftTeams-image (10)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/33286826-3298-4895-ae5e-be751aa44abd">
-<img width="325" alt="MicrosoftTeams-image (11)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/0f3ba0ba-8004-4913-81f1-540e08179f5d">
-<img width="325" alt="MicrosoftTeams-image (12)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/df0557fa-d55e-4c16-b50e-3e3ffb00a863">
+
+2. #### Use this section to capture and customise events. **Required** for capturing shutdown event
 
 
-● It has been tested and developed with current android versions 🎯 .
+    ```kotlin
+    class WebAppInterface(private val mContext: Context,isVisible: MutableState<Boolean>) {
+
+        var mvisible : MutableState<Boolean>?=null;
+
+        init {
+            myVisible = isVisible;
+        }
+
+        @JavascriptInterface
+        fun getCloseChatEvent(toast: String) {
+            myVisible?.value = false
+        }
+    }
+    ```
+
+
+3. #### Call the composable `WebViewScreen`` function created
+
+
+    ```kotlin
+    class MainActivity : ComponentActivity {
+        override fun onCreate(savedInstanceState: Bundle?) {
+
+            super.onCreate(savedInstanceState)
+
+            setContent {
+                WebviewWebchatTheme {
+                    Surface (
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ){
+                        NavigationView()
+                    }
+                }
+            }
+        }
+    }
+    ```
+
+
+4.  #### Grant permissions in AndroidManifest.xml,  ie. *internet access*
+
+
+    - `android.permission.INTERNET`
+    - `android.permission.RECORD_AUDIO`
+    - `android.permission.MODIFY_AUDIO_SETTINGS`
+    - `android.permission.WRITE_EXTERNAL_STORAGE`
+    - `android.permission.READ_EXTERNAL_STORAGE`
+    - `android.permission.CHANGE_WIFI_MULTICAST_STATE`
+    - `android.permission.ACCESS_WIFI_STATE`
+    - `android.permission.CHANGE_WIFI_STATE`
+    - `android.permission.ACCESS_COARSE_LOCATION`
+    - `android.permission.CHANGE_NETWORK_STATE`
+    - `android.permission.ACCESS_NETWORK_STATE`
+
+
+7. #### Implement packages in your build.gralde file
+
+    - `androidx.navigation:navigation-compose:2.5.3`
+    - `androidx.compose.material3:material3:1.2.0-alpha02`
+    - `com.google.accompanist:accompanist-permissions:0.29.0-alpha`
+
+
+8. #### Show the `Webview` with a `buttonModalSheet`. Configure as per your project requirement
+
+
+    <img width="750" alt="MicrosoftTeams-image (17)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/e84fe9d8-beaf-477e-b69b-721302f2285b">
+
+
+9. #### Have fun while developing ✨ 🎉
+
+## Sample Screenshots:
+<img width="750" alt="MicrosoftTeams-image (10)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/33286826-3298-4895-ae5e-be751aa44abd">
+
+<img width="750" alt="MicrosoftTeams-image (11)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/0f3ba0ba-8004-4913-81f1-540e08179f5d">
+
+<img width="750" alt="MicrosoftTeams-image (12)" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/df0557fa-d55e-4c16-b50e-3e3ffb00a863">
+
+
 
