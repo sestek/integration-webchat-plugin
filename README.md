@@ -37,3 +37,7 @@
     - [iOS integration][4]
   * You can pull and use our webchat plugin in Flutter
     - [Android integration][5]
+
+    
+  <img width="1169" alt="Screenshot 2023-11-15 at 12 58 01" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/3502ef5c-f718-4dfd-99ee-478cc52e8bd5">
+
