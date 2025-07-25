@@ -1,4 +1,5 @@
 package com.example.webviewwebchat
+import android.util.Log
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -145,6 +146,8 @@ class WebAppInterface(private val mContext: Context,isVisible: MutableState<Bool
     }
     @JavascriptInterface
     fun getCloseChatEvent(toast: String) {
+        Log.d("WebAppInterface", "Gelen mesaj: $toast")
+
         myVisible?.value = false
     }
 }
@@ -184,7 +187,7 @@ fun WebViewScreen(isVisible: MutableState<Boolean>) {
     webView.addJavascriptInterface(WebAppInterface(context,isVisible), "Android")
 
 
-    webView.loadUrl("https://demo-app.sestek.com/gbk_mobile.html")
+    webView.loadUrl("https://demo-app.sestek.com/webviewapp/mobile.html")
 
 
     AndroidView(

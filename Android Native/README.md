@@ -22,7 +22,7 @@
 
         webView.addJavascriptInterface(WebAppInterface(context, isVisible),name: "Android")
 
-        webView.loadUrl( url: "https://demo-app.sestek.com/gbk mobile.html")
+        webView.loadUrl( url: "https://demo-app.sestek.com/wc-mobile.html")
 
         AndroidView(
             modifier = Modifier.fillMaxSize(),

@@ -45,7 +45,26 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>WebChat requires acess to microphone.</string>
+
+  <key>NSMicrophoneUsageDescription</key>
+  <string>This app requires microphone access for voice interaction.</string>
+  <key>NSCameraUsageDescription</key>
+  <string>This app requires camera access.</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>This app requires access to your photo library.</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>This app requires location access while using the app.</string>
+
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app requires microphone access for voice interaction.</string>
+  </dict>
 </dict>
+
+
+
+
 </plist>

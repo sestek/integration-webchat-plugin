@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+		/* this image is prepared as a demo.
+			you can replace it with any other image you want. */
+		body {
+            background-image: url('https://demo-app.sestek.com/Images/ajmanBack.png'); 
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+    </style>
+    <script>
+        window.sestekInitConfig = {
+            customMetaData: {
+                userId: "123456",
+
+            },
+            initialOptionsData: "Type Here... ", //placeholder text to be written to input
+            chatPageTitle: "AjmanBank Virtual Agent", //text to be placed on the top bar only when the chat screen opens
+            channel: 'kiosk', //required field specify on which platform you will run it
+            vaCredentialId: '43b29cf7-c07e-4e7d-becd-aadda22cd7e8', //required field 
+            dataFlowCredentialID: 'b6035d7c-a4ed-4bfa-b7e6-7463e5cccde7',//required field
+            projectName: 'AjmanBankFullLLM', //required field VA projecet name
+            enableAvatar: false, //required field ,
+            connectionUrl: "https://api-eu.uneeq.io", //uneeq connection address
+            personaId: "f62732f4-513b-4323-8aa7-da35e1e72746", //required field 
+            sestektts: true, //required field sesstek tts use
+            defaultLanguage: 'en-US', //required field
+			dataFlowProjectName: 'avatar',
+            dataFlowTenantId: '3a1a7b64-53b1-7074-9e91-b03f0baaef85',
+            dataFlowTokenCredential: 'YWptYW5iYW5rX1dhZ3RhaWxAUzZDVXpHcWJJMzVENDRMV2c=',
+			
+        };
+    </script>
+     <script>
+        window.addEventListener("message", (event) => {
+            if (event.data?.type === "CLOSE_CHAT") {
+                const iframe = document.querySelector("iframe");
+                if (iframe) iframe.remove();
+
+                console.log("Chat asked to close");
+            }
+            if (event.data?.type === "handleRedirect") {
+                console.log("handleRedirect", event.data)
+
+
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <script src="https://va.uae.knovvu.com/avataradapter/sestekavatar.js"></script>
+
+</body>
+
+</html>
