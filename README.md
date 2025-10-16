@@ -15,29 +15,39 @@
  <img height="50" src="https://user-images.githubusercontent.com/25181517/186150365-da1eccce-6201-487c-8649-45e9e99435fd.png">
 </div>
 
-- React Native
-  * rn-sestek-webchat Package
-  * Our preference is for you to use this package that we have developed.
-  * [React Native Package][1]
- 
-- iOS
-  
-  * We have a package that you can use on the iOS platform or use webview webchat plugin.
-  * Our choice webchat plugin webview
-  * iOS webchat webview : [iOS webchat webview][6]
-  * iOS Package :  [iOS Package][2]
+---
 
-    
-- Android Native 
-  * You can use webchat as webview in android native
-  * [Android Native Webview][3]
-    
-- Flutter 
-  * You can pull and use our ios package in Flutter
-    - [iOS integration][4]
-  * You can pull and use our webchat plugin in Flutter
-    - [Android integration][5]
+### React Native
+- **rn-sestek-webchat** Package  
+  Our preferred approach for React Native integrations.  
+  → [React Native Package][1]  
+  Alternatively, you can also integrate WebChat directly through a **WebView** component if desired.
 
-    
-  <img width="1169" alt="Screenshot 2023-11-15 at 12 58 01" src="https://github.com/sestek/integration-webchat-plugin/assets/52357126/3502ef5c-f718-4dfd-99ee-478cc52e8bd5">
+---
+
+### iOS
+- **WebView-based Integration**  
+  The recommended way to use WebChat on iOS is through a WebView implementation.  
+  → [iOS WebChat WebView Example][6]
+
+---
+
+### Android Native
+- **WebView-based Integration**  
+  You can use WebChat as a WebView component in Android Native projects.  
+  → [Android Native WebView][3]
+
+---
+
+### Flutter
+- **WebView Integration**  
+  You can embed our WebChat plugin into Flutter for both iOS and Android platforms.  
+  - [Flutter iOS Integration][4]  
+  - [Flutter Android Integration][5]  
+  WebChat can also be integrated directly via a **WebView** within your Flutter project.
+
+---
+<img width="841" height="583" alt="Screenshot 2025-10-16 at 15 18 46" src="https://github.com/user-attachments/assets/7b3dd222-694e-4c4b-96c2-03e2fedcde30" />
+
+
 
