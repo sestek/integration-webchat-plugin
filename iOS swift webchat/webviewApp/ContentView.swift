@@ -1,71 +1,204 @@
 import SwiftUI
 import WebKit
 
-final class SwiftUIWebViewModel: NSObject, ObservableObject, WKScriptMessageHandler {
-    @Published var isWebViewOpen = false
-    var webView: WKWebView!
+enum ChatState { case closed, hidden, visible }
 
-    override init() {
-        super.init()
+@inline(__always)
+private func onMain(_ block: @escaping () -> Void) {
+    if Thread.isMainThread { block() } else { DispatchQueue.main.async(execute: block) }
+}
 
-        let contentController = WKUserContentController()
-        contentController.add(self, name: "callbackHandler")
+final class ScriptBridge: NSObject, WKScriptMessageHandler {
+    weak var owner: SwiftUIWebViewModel?
 
-        let config = WKWebViewConfiguration()
-        config.userContentController = contentController
+    init(owner: SwiftUIWebViewModel) { self.owner = owner }
 
-        self.webView = WKWebView(frame: .zero, configuration: config)
-    }
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        guard let dict = message.body as? [String: Any],
+              let event = dict["event"] as? String else { return }
 
-    func loadUrl() {
-        guard let url = URL(string: "https://demo-app.sestek.com/webviewapp/mobile.html") else { return }
-        let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 20)
-        webView.load(request)
-    }
-
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        print("📩 Message from JS: \(message.body)")
-
-        if let dictionary = message.body as? [String: Any],
-           let event = dictionary["event"] as? String,
-           event == "closeChat" {
-            print("✅ closeChat event received. Closing WebView.")
-
-            self.isWebViewOpen = false
-
-            DispatchQueue.main.async {
-                
-                print("✅ closeChat event received. Closing WebView.")
-                self.isWebViewOpen = false
+        onMain {
+            guard let vm = self.owner, !vm.isShuttingDown else { return }
+            switch event {
+            case "hideChat":
+                if vm.shouldIgnoreHideEvent() { return }
+                vm.hide()
+            case "closeChat":
+                vm.close()
+            default:
+                break
             }
         }
     }
 }
 
-struct SwiftUIWebView: UIViewRepresentable {
-    @Binding var isWebViewOpen: Bool
-    let webView: WKWebView
+final class SwiftUIWebViewModel: NSObject, ObservableObject, WKNavigationDelegate, WKUIDelegate {
+    @Published var state: ChatState = .closed
 
-    func makeUIView(context: Context) -> WKWebView {
-        return webView
+    private(set) var webView: WKWebView?
+    private var bridge: ScriptBridge?
+    private let handlerName = "callbackHandler"
+
+    private let startURL = URL(string: "https://demo-app.sestek.com/webviewapp/mobile.html")!
+
+    private var ignoreHideUntil: Date?
+    fileprivate var isShuttingDown = false
+
+    func shouldIgnoreHideEvent() -> Bool {
+        if let until = ignoreHideUntil, Date() < until { return true }
+        return false
     }
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
+    func open() {
+        onMain {
+            self.ensureWebView()
+            self.loadIfNeeded()
+            self.state = .visible
+            self.armHideGuard(1.2)
+        }
+    }
+
+    func hide() {
+        onMain {
+            guard self.webView != nil else { return }
+            self.state = .hidden
+        }
+    }
+
+    func close() {
+        onMain {
+            self.state = .closed
+            self.tearDownWebView()
+        }
+    }
+
+    private func armHideGuard(_ seconds: TimeInterval) {
+        ignoreHideUntil = Date().addingTimeInterval(seconds)
+    }
+
+    private func ensureWebView() {
+        guard webView == nil else { return }
+
+        let config = WKWebViewConfiguration()
+        let contentController = WKUserContentController()
+        contentController.removeScriptMessageHandler(forName: handlerName)
+
+        let bridge = ScriptBridge(owner: self)
+        contentController.add(bridge, name: handlerName)
+        self.bridge = bridge
+        config.userContentController = contentController
+
+        let wv = WKWebView(frame: .zero, configuration: config)
+        wv.isOpaque = false
+        wv.backgroundColor = .clear
+
+        // 👇 ÖNEMLİ: delegeler
+        wv.navigationDelegate = self
+        wv.uiDelegate = self
+
+        self.webView = wv
+    }
+
+    private func loadIfNeeded() {
+        guard let webView = webView, webView.url == nil else { return }
+        let req = URLRequest(url: startURL, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 20)
+        webView.load(req)
+    }
+
+    private func tearDownWebView() {
+        guard let wv = webView else { return }
+        isShuttingDown = true
+
+        bridge?.owner = nil
+        wv.stopLoading()
+        wv.navigationDelegate = nil
+        wv.uiDelegate = nil
+
+        bridge = nil
+        webView = nil
+        ignoreHideUntil = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            self?.isShuttingDown = false
+        }
+    }
+
+    // MARK: - Dış Link Açma
+    private func openExternal(_ url: URL) {
+        if ["http", "https", "mailto", "tel", "sms", "whatsapp"].contains(url.scheme?.lowercased() ?? "") {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            print("Unsupported scheme: \(url)")
+        }
+    }
+
+    // 👇 Linke tıklama durumunu yakala
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow); return
+        }
+
+        let isInitialLoad = (webView.url == nil && url == startURL)
+        let isUserTap = navigationAction.navigationType == .linkActivated
+        let isTargetBlank = navigationAction.targetFrame == nil
+
+        if !isInitialLoad && (isUserTap || isTargetBlank) {
+            openExternal(url)
+            decisionHandler(.cancel)
+            return
+        }
+
+        decisionHandler(.allow)
+    }
+
+    // 👇 target="_blank" gibi yeni pencere durumları
+    func webView(_ webView: WKWebView,
+                 createWebViewWith configuration: WKWebViewConfiguration,
+                 for navigationAction: WKNavigationAction,
+                 windowFeatures: WKWindowFeatures) -> WKWebView? {
+
+        if let url = navigationAction.request.url {
+            openExternal(url)
+        }
+        return nil
+    }
+}
+
+struct WebViewHost: UIViewRepresentable {
+    let webView: WKWebView
+    let visible: Bool
+
+    func makeUIView(context: Context) -> WKWebView { webView }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        uiView.isHidden = !visible
+        uiView.isUserInteractionEnabled = visible
+    }
 }
 
 struct ContentView: View {
     @StateObject private var model = SwiftUIWebViewModel()
 
     var body: some View {
-        VStack {
-            if model.isWebViewOpen {
-                SwiftUIWebView(isWebViewOpen: $model.isWebViewOpen, webView: model.webView)
-                    .onAppear {
-                        model.loadUrl()
+        ZStack {
+            if let wv = model.webView {
+                WebViewHost(webView: wv, visible: model.state == .visible)
+                    .ignoresSafeArea()
+            }
+
+            if model.state != .visible {
+                VStack {
+                    Spacer()
+                    Button("Open Sestek WebChat") {
+                        model.open()
                     }
-            } else {
-                Button("Open Sestek WebChat") {
-                    model.isWebViewOpen = true
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .padding(.bottom, 24)
                 }
             }
         }

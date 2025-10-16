@@ -2,7 +2,6 @@
 //  webviewAppApp.swift
 //  webviewApp
 //
-//  Created by Tayfun  on 13.10.2023.
 //
 
 import SwiftUI
